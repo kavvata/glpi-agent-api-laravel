@@ -21,17 +21,17 @@ class AtivoController extends Controller
     public function store(Request $request)
     {
         if (!$request->file('inventario')) {
-            return '<h2> Deu ruim fii... </h2>';
+            return response(status: 422, content: 'Arquivo inválido');
         }
 
-        $xmlParser = xml_parser_create();
+        $inventarioArr = json_decode(
+            json_encode(simplexml_load_string($request->file('inventario')->get())),
+            true
+        );
 
-        $inventarioXml = $request->file('inventario')->get();
-        $inventarioArr = json_decode(json_encode(simplexml_load_string($inventarioXml)), true);
+        // return var_dump($inventarioArr);
 
-        return var_dump($inventarioArr);
-
-        return '<h2> Deu boa! </h2>';
+        return response(status: 200, content: 'Inventario realizado com sucesso');
     }
 
     /**
